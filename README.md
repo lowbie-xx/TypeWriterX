@@ -110,4 +110,4 @@ src-tauri     the small Rust shell (file I/O, native menu, "Open With")
 
 ## Licence
 
-MIT. See [LICENSE](LICENSE). The bundled fonts keep their own licences (SIL OFL 1.1 and Apache 2.0), which are included in `public/fonts/licenses`.
+MIT. See [LICENSE](LICENSE) and [NOTICE](NOTICE). The bundled fonts keep their own licences (SIL OFL 1.1 and Apache 2.0), which are included in `public/fonts/licenses`.
