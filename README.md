@@ -6,6 +6,18 @@ A small, fast word processor that behaves like a real typewriter. Nothing is eve
 
 Built with [Tauri](https://tauri.app) and a dependency-free TypeScript + Canvas core. The macOS app is about 3.4 MB. It uses the system web view instead of bundling a browser, so it starts quickly and stays light on memory. The same core runs on Windows and in the browser.
 
+## Download
+
+**macOS (Apple Silicon):** get `TypeWriterX-macOS-arm64.zip` from the [latest release](https://github.com/lowbie-xx/TypeWriterX/releases/latest), unzip it and drag **TypeWriterX** into Applications.
+
+The app isn't notarised by Apple yet, so the first time you open it macOS will block it. Go to **System Settings › Privacy & Security** and click **Open Anyway** (you only need to do this once). Or, in Terminal:
+
+```bash
+xattr -dr com.apple.quarantine /Applications/TypeWriterX.app
+```
+
+Windows and web builds are on the way. You can also build any of them yourself, as described below.
+
 ## Features
 
 **The machine**
@@ -94,7 +106,7 @@ npm run build:web    # static site in dist/
 
 ### Windows
 
-Run `npm run app:build` on Windows, or push a `v*` tag and the GitHub Actions **Release** workflow builds macOS and Windows installers into a draft release.
+Run `npm run app:build` on Windows, or run the **Release** workflow from the repository's Actions tab to build macOS (universal) and Windows installers into a draft release.
 
 ## Project layout
 

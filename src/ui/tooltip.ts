@@ -6,7 +6,7 @@ const DELAY = 250;
  * Quick tooltips. Native `title` tooltips wait about a second, so every
  * element with a title is converted to data-tip and shown by this instead.
  */
-export function installTooltips(root: HTMLElement = document.body) {
+export function installTooltips(enabled: () => boolean, root: HTMLElement = document.body) {
   const tip = h("div", { id: "tooltip", role: "tooltip" });
   document.body.append(tip);
   let current: HTMLElement | null = null;
@@ -53,7 +53,7 @@ export function installTooltips(root: HTMLElement = document.body) {
     const el = (e.target as Element).closest<HTMLElement>("[data-tip]");
     if (el === current) return;
     hide();
-    if (!el) return;
+    if (!el || !enabled()) return;
     current = el;
     timer = window.setTimeout(() => show(el), DELAY);
   });

@@ -50,7 +50,7 @@ class App implements AppApi {
     this.settings = new SettingsPanel(this);
     document.getElementById("app")!.append(canvas, this.toolbar.el, this.toolbar.status, this.settings.el, this.toastEl, sink, h("div", { id: "modal-root" }));
 
-    installTooltips();
+    installTooltips(() => this.prefs.tooltips);
     this.machine.onSound = (e, a) => this.sound.play(e, a);
     this.machine.onChange = (content) => {
       if (content) this.markDirty();

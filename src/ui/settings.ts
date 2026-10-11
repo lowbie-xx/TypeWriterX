@@ -81,6 +81,7 @@ const SECTIONS: { title: string; items: Item[] }[] = [
       { pref: "showGuide", type: "toggle", label: "Show platen & type point" },
       { pref: "showScale", type: "toggle", label: "Show carriage scale" },
       { pref: "autoHideToolbar", type: "toggle", label: "Fade toolbar while typing" },
+      { pref: "tooltips", type: "toggle", label: "Show tooltips", hint: "Labels and keyboard shortcuts when you hover over buttons." },
       { pref: "exportDpi", type: "select", label: "PDF / PNG resolution", options: [[150, "150 dpi — small files"], [200, "200 dpi"], [300, "300 dpi — print quality"]] },
     ],
   },

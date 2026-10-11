@@ -58,6 +58,7 @@ export interface Prefs {
   showGuide: boolean;
   showScale: boolean;
   autoHideToolbar: boolean;
+  tooltips: boolean;
 
   // New document defaults
   defaultFont: string;
@@ -115,6 +116,7 @@ export const DEFAULT_PREFS: Prefs = {
   showGuide: true,
   showScale: true,
   autoHideToolbar: true,
+  tooltips: true,
 
   defaultFont: "special-elite",
   defaultPitch: 10,

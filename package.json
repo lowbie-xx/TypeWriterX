@@ -14,7 +14,7 @@
     "typecheck": "tsc --noEmit",
     "tauri": "tauri",
     "app:dev": "tauri dev",
-    "app:build": "tauri build"
+    "app:build": "RUSTFLAGS=\"--remap-path-prefix=$HOME=/build\" tauri build"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.12.3",
