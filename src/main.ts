@@ -17,6 +17,7 @@ import { closeModal, helpDialog, modalOpen, newDocumentDialog } from "./ui/dialo
 import { h } from "./ui/dom";
 import { SettingsPanel } from "./ui/settings";
 import { Toolbar } from "./ui/toolbar";
+import { installTooltips } from "./ui/tooltip";
 
 const AUTOSAVE_KEY = "typewriterx.autosave";
 
@@ -49,6 +50,7 @@ class App implements AppApi {
     this.settings = new SettingsPanel(this);
     document.getElementById("app")!.append(canvas, this.toolbar.el, this.toolbar.status, this.settings.el, this.toastEl, sink, h("div", { id: "modal-root" }));
 
+    installTooltips();
     this.machine.onSound = (e, a) => this.sound.play(e, a);
     this.machine.onChange = (content) => {
       if (content) this.markDirty();

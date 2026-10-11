@@ -321,6 +321,29 @@ select {
   z-index: 5;
 }
 
+#tooltip {
+  position: fixed;
+  left: 0;
+  top: 0;
+  max-width: 320px;
+  padding: 5px 9px;
+  border-radius: 6px;
+  background: var(--chrome-solid);
+  border: 1px solid var(--chrome-border);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.35;
+  white-space: pre-line;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.1s;
+  z-index: 60;
+}
+#tooltip.show {
+  opacity: 1;
+}
+
 #toast {
   position: absolute;
   top: 60px;

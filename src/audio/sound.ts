@@ -6,41 +6,57 @@ import type { Prefs } from "../core/prefs";
  * context is created lazily on the first keystroke and suspends when idle.
  */
 export class Sound {
-  private ctx: AudioContext | null = null;
+  private ctx: BaseAudioContext | null = null;
+  /** Rendering into an OfflineAudioContext (e.g. a soundtrack) rather than live. */
+  private offline = false;
   private master!: GainNode;
   private noise!: AudioBuffer;
   private idleTimer = 0;
-  private lastTick = 0;
+  private lastTick = -1;
 
   constructor(private prefs: () => Prefs) {}
 
-  private ensure(): AudioContext | null {
+  private setup(ctx: BaseAudioContext) {
+    this.ctx = ctx;
+    this.master = ctx.createGain();
+    this.master.connect(ctx.destination);
+    const len = Math.floor(ctx.sampleRate * 0.6);
+    this.noise = ctx.createBuffer(1, len, ctx.sampleRate);
+    const d = this.noise.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+  }
+
+  /** Render into an offline context instead of the speakers; pass times to play(). */
+  attachOffline(ctx: OfflineAudioContext) {
+    this.setup(ctx);
+    this.offline = true;
+    this.master.gain.value = this.prefs().volume;
+  }
+
+  private ensure(): BaseAudioContext | null {
+    if (this.offline) return this.ctx;
     if (!this.prefs().sound) return null;
     if (!this.ctx) {
       try {
-        this.ctx = new AudioContext({ latencyHint: "interactive" });
+        this.setup(new AudioContext({ latencyHint: "interactive" }));
       } catch {
         return null;
       }
-      this.master = this.ctx.createGain();
-      this.master.connect(this.ctx.destination);
-      const len = Math.floor(this.ctx.sampleRate * 0.6);
-      this.noise = this.ctx.createBuffer(1, len, this.ctx.sampleRate);
-      const d = this.noise.getChannelData(0);
-      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
     }
-    if (this.ctx.state === "suspended") void this.ctx.resume();
+    const live = this.ctx as AudioContext;
+    if (live.state === "suspended") void live.resume();
     this.master.gain.value = this.prefs().volume;
     // Release the audio device when the machine falls quiet.
     clearTimeout(this.idleTimer);
-    this.idleTimer = window.setTimeout(() => void this.ctx?.suspend(), 8000);
-    return this.ctx;
+    this.idleTimer = window.setTimeout(() => void live.suspend(), 8000);
+    return live;
   }
 
-  play(e: SoundEvent, amount = 0.5) {
+  /** `at` schedules on the context's clock (offline rendering); otherwise plays now. */
+  play(e: SoundEvent, amount = 0.5, at?: number) {
     const ctx = this.ensure();
     if (!ctx) return;
-    const t = ctx.currentTime + 0.002;
+    const t = at ?? ctx.currentTime + 0.002;
     switch (e) {
       case "key":
         this.clack(t, 0.55 + amount * 0.45, 2600 + Math.random() * 900);
@@ -60,9 +76,8 @@ export class Sound {
         // Platen detent: one short, dry click. Scrolling can fire dozens of
         // notches a second, so clicks are rate-limited and never overlap.
         if (!this.prefs().gestureSound) break;
-        const now = performance.now();
-        if (now - this.lastTick < 45) break;
-        this.lastTick = now;
+        if (this.lastTick >= 0 && t - this.lastTick < 0.045) break;
+        this.lastTick = t;
         this.tick(t);
         break;
       }
