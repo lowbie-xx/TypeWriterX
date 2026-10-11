@@ -37,7 +37,7 @@ Mac keyboards can't sense key pressure, so TypeWriterX uses stand-ins, each of w
 
 Press ⌘L to release the ratchet. A two-finger scroll then rolls the platen and slides the carriage freely, so you can place text anywhere on the page.
 - **Locks**: platen (vertical), carriage (horizontal) and paper rotation.
-- **Two-finger rotate** skews the paper in the machine, so you type at an angle (unlock rotation first).
+- **Two-finger twist** (or ⌥⌘← / ⌥⌘→) rotates the paper in the machine, so you type at an angle. ⌥⌘A straightens it.
 - **Click to position** the type point, with optional snapping to half-steps.
 - Without the line release, scrolling moves in ratchet notches, one line or one character at a time.
 
@@ -61,7 +61,7 @@ Key clacks, the margin bell, the carriage return and the platen ratchet are all 
 | ← → ↑ ↓ | Move carriage / roll platen (⌥ for half steps) |
 | Two-finger scroll | Roll the platen and slide the carriage |
 | Pinch | Zoom |
-| Two-finger rotate | Skew the paper (free mode, rotation unlocked) |
+| Two-finger twist, ⌥⌘← ⌥⌘→ | Rotate the paper (⌥⌘A straightens) |
 | ⌥ + scroll | Look around without moving anything |
 | ⌘L | Line release (free movement) |
 | ⌥⌘P / ⌥⌘C / ⌥⌘R | Lock platen / carriage / rotation |

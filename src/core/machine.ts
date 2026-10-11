@@ -52,7 +52,7 @@ export class Machine {
     free: false,
     lockX: false,
     lockY: false,
-    lockRot: true,
+    lockRot: false,
     marginRelease: false,
     correction: false,
     tippex: false,
@@ -467,10 +467,11 @@ export class Machine {
     }
   }
 
-  /** Rotate the sheet in the machine about the type point (free mode). */
-  rotatePaper(delta: number) {
-    if (!this.session.free || this.session.lockRot) return;
+  /** Rotate the sheet in the machine about the type point. Returns false if rotation is locked. */
+  rotatePaper(delta: number): boolean {
+    if (this.session.lockRot) return false;
     this.setSkew(this.m.a + delta);
+    return true;
   }
 
   setSkew(a: number) {

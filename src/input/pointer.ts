@@ -13,11 +13,20 @@ interface GestureEvent extends UIEvent {
  * Trackpad and mouse:
  * - two-finger scroll rolls the platen (vertical) and slides the carriage
  *   (horizontal), in ratchet notches or freely with the line release;
- * - pinch zooms, and a two-finger rotate skews the paper in free mode;
+ * - pinch zooms, and a two-finger twist skews the paper;
  * - ⌥ + scroll looks around the desk without moving the machine;
  * - with the Tipp-Ex brush, dragging paints whiteout on the sheet.
  */
-export function installPointer(canvas: HTMLCanvasElement, machine: Machine, renderer: Renderer, prefs: () => Prefs) {
+/** Degrees of twist before a two-finger gesture counts as rotating the paper. */
+const ROTATE_THRESHOLD = 4;
+
+export function installPointer(
+  canvas: HTMLCanvasElement,
+  machine: Machine,
+  renderer: Renderer,
+  prefs: () => Prefs,
+  hint: (message: string) => void,
+) {
   let accX = 0, accY = 0;
   let lastWheel = 0;
   // Unsnapped free position, so snapping doesn't eat small movements.
@@ -90,22 +99,38 @@ export function installPointer(canvas: HTMLCanvasElement, machine: Machine, rend
     { passive: false },
   );
 
-  // Safari / WKWebView trackpad gestures: pinch and rotate.
+  // Safari / WKWebView trackpad gestures: pinch and rotate. Rotation only
+  // engages after a deliberate twist, so pinching doesn't skew the paper; once
+  // rotating, zoom holds still.
   let startZoom = 1;
   let lastRot = 0;
+  let rotating = false;
+  let hinted = false;
   canvas.addEventListener("gesturestart", (ev) => {
     const e = ev as GestureEvent;
     e.preventDefault();
     startZoom = renderer.zoom;
-    lastRot = e.rotation;
+    lastRot = 0;
+    rotating = false;
+    hinted = false;
   });
   canvas.addEventListener("gesturechange", (ev) => {
     const e = ev as GestureEvent;
     e.preventDefault();
-    renderer.setZoom(startZoom * e.scale, local(e));
+    if (!rotating && Math.abs(e.rotation) > ROTATE_THRESHOLD) {
+      rotating = true;
+      lastRot = e.rotation;
+    }
+    if (!rotating) {
+      renderer.setZoom(startZoom * e.scale, local(e));
+      return;
+    }
     const d = e.rotation - lastRot;
     lastRot = e.rotation;
-    if (d) machine.rotatePaper((d * Math.PI) / 180);
+    if (d && !machine.rotatePaper((d * Math.PI) / 180) && !hinted) {
+      hinted = true;
+      hint("Paper rotation is locked — unlock it with ⌥⌘R");
+    }
   });
   canvas.addEventListener("gestureend", (ev) => ev.preventDefault());
 

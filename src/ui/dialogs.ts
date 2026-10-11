@@ -145,7 +145,7 @@ export function helpDialog(commands: Commands) {
     ["← → ↑ ↓", "Move carriage / roll platen (⌥ = half steps)"],
     ["Two-finger scroll", "Roll the platen ↕ and slide the carriage ↔ (ratchet notches, or freely with the line release)"],
     ["Pinch", "Zoom"],
-    ["Two-finger rotate", "Skew the paper (free mode, rotation unlocked)"],
+    ["Two-finger twist  /  ⌥⌘← ⌥⌘→", "Rotate the paper in the machine (⌥⌘A straightens)"],
     ["⌥ + scroll", "Look around the desk without moving anything"],
     ["Tipp-Ex brush (⌘K)", "Drag over letters to paint them out, then type over the dried fluid"],
     ["Esc", "Put the Tipp-Ex down / close panels / leave focus mode"],

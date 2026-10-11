@@ -122,7 +122,6 @@ export class Toolbar {
     r.lockY.classList.toggle("on", s.lockY);
     r.lockX.classList.toggle("on", s.lockX);
     r.lockRot.classList.toggle("on", s.lockRot);
-    r.lockRot.toggleAttribute("disabled", !s.free);
     r.mr.classList.toggle("on", s.marginRelease);
     r.tippex.classList.toggle("on", s.tippex);
     r.tape.classList.toggle("on", s.correction);
@@ -140,7 +139,7 @@ export class Toolbar {
 
     const flags = [
       s.free && "Free",
-      s.free && machine.m.a !== 0 && `Skew ${((machine.m.a * 180) / Math.PI).toFixed(1)}°`,
+      Math.abs(machine.m.a) > 1e-4 && `Skew ${((machine.m.a * 180) / Math.PI).toFixed(1)}°`,
       s.marginRelease && "Margin released",
       s.tippex && "Tipp-Ex — drag to paint, Esc to finish",
       s.correction && "Correction tape",

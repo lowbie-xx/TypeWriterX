@@ -68,7 +68,7 @@ class App implements AppApi {
       },
       sink,
     );
-    this.updateCursor = installPointer(canvas, this.machine, this.renderer, getPrefs);
+    this.updateCursor = installPointer(canvas, this.machine, this.renderer, getPrefs, (msg) => this.toast(msg));
     window.addEventListener("pointermove", () => document.body.classList.remove("typing"));
     window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => this.applyDesk());
 
@@ -286,6 +286,10 @@ class App implements AppApi {
     }
   }
 
+  private rotateBy(degrees: number) {
+    if (!this.machine.rotatePaper((degrees * Math.PI) / 180)) this.toast("Paper rotation is locked — unlock it with ⌥⌘R");
+  }
+
   // ── commands ──────────────────────────────────────────────────────────────
 
   private registerCommands() {
@@ -317,6 +321,8 @@ class App implements AppApi {
       { id: "lockPlaten", label: "Lock Platen (Vertical)", menu: "Machine", accel: "CmdOrCtrl+Alt+P", run: flip("Platen lock", () => sess().lockY, (v) => (sess().lockY = v)) },
       { id: "lockCarriage", label: "Lock Carriage (Horizontal)", menu: "Machine", accel: "CmdOrCtrl+Alt+C", run: flip("Carriage lock", () => sess().lockX, (v) => (sess().lockX = v)) },
       { id: "lockRotation", label: "Lock Paper Rotation", menu: "Machine", accel: "CmdOrCtrl+Alt+R", run: flip("Rotation lock", () => sess().lockRot, (v) => (sess().lockRot = v)) },
+      { id: "rotateLeft", label: "Rotate Paper Anticlockwise", menu: "Machine", accel: "CmdOrCtrl+Alt+Left", run: () => this.rotateBy(-0.5) },
+      { id: "rotateRight", label: "Rotate Paper Clockwise", menu: "Machine", accel: "CmdOrCtrl+Alt+Right", run: () => this.rotateBy(0.5) },
       { id: "straighten", label: "Straighten Paper", menu: "Machine", accel: "CmdOrCtrl+Alt+A", run: () => m().straighten() },
       { id: "marginRelease", label: "Margin Release", menu: "Machine", accel: "CmdOrCtrl+Shift+M", run: () => m().toggleMarginRelease(), sep: true },
       { id: "halfUp", label: "Half Line Up", menu: "Machine", accel: "CmdOrCtrl+Up", run: () => m().feedLines(-0.5) },
