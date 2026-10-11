@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a322b"/>
+      <stop offset="1" stop-color="#1f1a16"/>
+    </linearGradient>
+    <linearGradient id="platen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4a4440"/>
+      <stop offset="0.45" stop-color="#151311"/>
+      <stop offset="1" stop-color="#2c2825"/>
+    </linearGradient>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f7f1e3"/>
+      <stop offset="1" stop-color="#e9e0cb"/>
+    </linearGradient>
+  </defs>
+  <rect x="100" y="100" width="824" height="824" rx="185" fill="url(#bg)"/>
+  <g transform="rotate(-4 512 520)">
+    <rect x="262" y="150" width="500" height="640" rx="10" fill="url(#paper)"/>
+    <!-- a typed "T" in black, overstruck slightly in red: the two ribbon bands -->
+    <rect x="372" y="300" width="230" height="56" fill="#1d1b1a"/>
+    <rect x="459" y="300" width="56" height="300" fill="#1d1b1a"/>
+    <rect x="419" y="600" width="136" height="38" fill="#1d1b1a"/>
+    <rect x="362" y="290" width="40" height="92" fill="#1d1b1a"/>
+    <rect x="572" y="290" width="40" height="92" fill="#1d1b1a"/>
+    <rect x="618" y="560" width="72" height="78" fill="#b3261e"/>
+  </g>
+  <rect x="150" y="700" width="724" height="120" rx="60" fill="url(#platen)"/>
+  <rect x="190" y="716" width="644" height="10" rx="5" fill="#ffffff" opacity="0.18"/>
+</svg>
