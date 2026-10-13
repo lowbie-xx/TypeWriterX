@@ -38,7 +38,11 @@ class App implements AppApi {
   private typingTimer = 0;
   private uiQueued = false;
 
-  constructor(private platform: Platform, doc: TwxDocument) {
+  constructor(private platform: Platform, doc: TwxDocument, restored?: { handle: DocHandle; dirty: boolean }) {
+    if (restored) {
+      this.docHandle = restored.handle;
+      this.dirty = restored.dirty;
+    }
     const getPrefs = () => this.prefs;
     this.machine = new Machine(doc, getPrefs);
 
@@ -75,7 +79,10 @@ class App implements AppApi {
     window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => this.applyDesk());
 
     platform.onCloseRequested(
-      () => this.dirty,
+      () => {
+        this.autosave();
+        return this.dirty;
+      },
       () => platform.ask("You have unsaved changes. Close anyway?", "Close"),
     );
     platform.onOpenFiles((paths) => paths[0] && void this.openPath(paths[0]));
@@ -194,6 +201,7 @@ class App implements AppApi {
     void this.applyFont();
     if (this.settings.isOpen) this.settings.render();
     this.refreshUi();
+    this.autosave();
   }
 
   private autosave() {
@@ -262,6 +270,7 @@ class App implements AppApi {
       this.docHandle = saved;
       this.dirty = false;
       this.autosaveDirty = true;
+      this.autosave();
       this.refreshUi();
       this.toast(`Saved “${saved.name}”`);
     } catch (e) {
@@ -402,10 +411,9 @@ async function boot() {
         paperColor: prefs.defaultPaperColor,
         ribbonName: prefs.defaultRibbon,
       }),
+    doc ? { handle, dirty } : undefined,
   );
   if (import.meta.env.DEV) (window as unknown as { twx: App }).twx = app;
-  app.docHandle = handle;
-  app.dirty = dirty;
   if (first) void app.newDocument(true);
 }
 
